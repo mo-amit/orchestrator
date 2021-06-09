@@ -1,0 +1,146 @@
+{
+  "metric":{
+    "name":"sample_submission",
+    "type":"csv",
+    "encoding":"UTF-8",
+    "locations":[
+      {
+        "input_dir":"/input",
+        "destination":"target_table_name",
+        "destination_type": "MongoDB",
+        "destination_credentials": {
+          "username" : "xxx",
+          "password": "yyy"
+        },
+        "filter": "*.gz",
+        "maxFileSizeinMB": "100",
+        "minEntiryCount": 1,
+        "acceptableErrorPercent": 5
+      }
+
+    ],
+    "preprocessedDestination":"/downloads/sample_submission",
+    "schema":{
+      "delimiter":"|",
+      "headerPresent":"true",
+      "fields":[
+        {
+          "name":"SubmitID",
+          "type":"long"
+        },
+        {
+          "name":"OfferID",
+          "type":"long"
+        },
+        {
+          "name":"BatchID",
+          "type":"long"
+        },
+        {
+          "name":"ReportNum",
+          "type":"long"
+        },
+        {
+          "name":"FirstName",
+          "type":"string"
+        },
+        {
+          "name":"LastName",
+          "type":"string"
+        },
+        {
+          "name":"Company",
+          "type":"string"
+        },
+        {
+          "name":"Address1",
+          "type":"string"
+        },
+        {
+          "name":"Address2",
+          "type":"string"
+        },
+        {
+          "name":"City",
+          "type":"string"
+        },
+        {
+          "name":"State",
+          "type":"string"
+        },
+        {
+          "name":"Country",
+          "type":"string",
+          "validator" : "com.ingestyon.ingestionValidator.countryValidator"
+        },
+        {
+          "name":"PostalCode",
+          "type":"string"
+        },
+        {
+          "name":"Zip4",
+          "type":"string"
+        }
+      ],
+      "key":"submitID"
+    },
+    "aggregation":[
+      {
+        "type":"count",
+        "returnType":"long",
+        "alias":"NumberCompanySubmissions",
+        "arguments":"Company"
+      }
+
+    ]
+
+  },
+  "joins":{
+    "cubeJoins":[
+
+    ],
+    "customJoins":[
+
+    ]
+
+  },
+  "lattice":{
+    "hierarchies":[
+      {
+        "list":[
+          "country",
+          "city"
+        ]
+
+      }
+
+    ]
+
+  },
+  "properties":{
+    "downloadStartedCallback":"http://hadoop-ui.local:8080/modataui/monitor/set/status/DownloadStarted?path=_filePath_",
+    "downloadCompletedCallback":"http://hadoop-ui.local:8080/modataui/monitor/set/status/DownloadFinished?path=_filePath_",
+    "downloadErrorCallback":"http://hadoop-ui.local:8080/modataui/monitor/set/status/Error?path=_filePath_%26error=_error_",
+    "appName":"Submissions",
+    "cube.table.name":"Submissions",
+    "cube.table.column.family":"NumberCompanySubmissions",
+    "hbase.zookeeper.quorum":"hadoop-hb",
+    "hbase.zookeeper.property.clientPort":"2181",
+    "hbase.master":"hadoop-hb:60000",
+    "fs.defaultFS":"hdfs://hadoop-nn.local:9000",
+    "mapreduce.jobhistory.address":"hadoop-jh.local.com:10020",
+    "yarn.timeline-service.address":"hadoop-jh.local:10200",
+    "yarn.timeline-service.hostname":"hadoop-jh.local",
+    "mapreduce.framework.name":"yarn",
+    "yarn.resourcemanager.hostname":"hadoop-rm.local",
+    "yarn.resourcemanager.address":"hadoop-rm.local:8032",
+    "yarn.resourcemanager.resource-tracker.address":"hadoop-rm.local:8031",
+    "yarn.resourcemanager.scheduler.address":"hadoop-rm.local:8030",
+    "yarn.nodemanager.aux-services.mapreduce.shuffle.class":"org.apache.hadoop.mapred.ShuffleHandler",
+    "yarn.nodemanager.aux-services":"mapreduce_shuffle",
+    "job.end.notification.url":"hadoop-ui:8080/dashboard/file/set/job/finished?name=$jobName",
+    "hbase.mapred.outputtable":",",
+    "cube.hdfs.lib.folder":"/cube/lib",
+    "cube.test":"false"
+  }
+}
