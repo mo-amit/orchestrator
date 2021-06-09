@@ -30,10 +30,10 @@ public class OrchestratorMain {
     public static void main(String[] args){
 
        BatchScheduler batchProcessScheduler = new BatchScheduler();
-       batchProcessScheduler.schedule(new BatchProcessor(),10);
+       batchProcessScheduler.schedule(new BatchProcessor(),2*60);
 
         BatchScheduler fileProcessorScheduler = new BatchScheduler();
-        fileProcessorScheduler.schedule(new FileProcessor(),2,2); //TODO: Scale number of threads up and down based on load
+        fileProcessorScheduler.schedule(new FileProcessor(),60,2); //TODO: Scale number of threads up and down based on load
 
 
 

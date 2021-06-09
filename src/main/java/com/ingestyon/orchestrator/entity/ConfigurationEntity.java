@@ -11,7 +11,7 @@ public class ConfigurationEntity extends BaseEntity{
 
     private String  processing_status;
     private String process; // type of process ingest
-    private final String FILE_LOCATION = "/tmp/orchestrator/";
+    private final String FILE_LOCATION = "/ingestion";
 
 
 
