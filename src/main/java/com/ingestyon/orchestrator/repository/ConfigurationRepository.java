@@ -47,19 +47,24 @@ public class ConfigurationRepository extends BaseRepository {
 
     public ArrayList<ConfigurationEntity> find() {
         ArrayList<ConfigurationEntity> retList = new ArrayList<ConfigurationEntity>();
-        MongoCursor<Document> cursor  = database.getCollection(COLLECTION_NAME).find().iterator();
-        while (cursor.hasNext()){
-            Document doc = cursor.next();
-            retList.add (new ConfigurationEntity(
-                    doc.getString("id"),
-                    doc.getString("processing_status"),
-                    doc.getString("process"),
-                    doc.getDate("created_at"),
-                    doc.getDate("update_at")));
+        MongoCursor<Document> cursor  = null;
+
+        try {
+            cursor = database.getCollection(COLLECTION_NAME).find().iterator();
+
+            while (cursor.hasNext()) {
+                Document doc = cursor.next();
+                retList.add(new ConfigurationEntity(
+                        doc.getString("id"),
+                        doc.getString("processing_status"),
+                        doc.getString("process"),
+                        doc.getDate("created_at"),
+                        doc.getDate("update_at")));
+            }
+        }finally {
+            cursor.close();
         }
-
             return retList;
-
     }
 
 

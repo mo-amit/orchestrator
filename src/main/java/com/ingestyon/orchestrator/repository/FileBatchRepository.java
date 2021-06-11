@@ -41,22 +41,27 @@ public class FileBatchRepository extends BaseRepository {
     public ArrayList<FileBatchLineItemEntity> find(Bson query) {
         ArrayList<FileBatchLineItemEntity> retList = new ArrayList<FileBatchLineItemEntity>();
         MongoCursor<Document> cursor = null;
-        if(query==null)
-             cursor = database.getCollection(COLLECTION_NAME).find().iterator();
-        else
-            cursor = database.getCollection(COLLECTION_NAME).find(query).iterator();
 
-        while (cursor.hasNext()){
-            Document doc = cursor.next();
-            FileBatchLineItemEntity entity = new FileBatchLineItemEntity(
-                    doc.getString("id"),
-                    doc.getInteger("fileID"),
-                    doc.getString("file_path"),
-                    doc.getString("configurationID"),
-                    doc.getString("processing_status"),
-                    doc.getDate("created_at"),
-                    doc.getDate("updated_at"));
-            retList.add(entity);
+        try {
+            if (query == null)
+                cursor = database.getCollection(COLLECTION_NAME).find().iterator();
+            else
+                cursor = database.getCollection(COLLECTION_NAME).find(query).iterator();
+
+            while (cursor.hasNext()) {
+                Document doc = cursor.next();
+                FileBatchLineItemEntity entity = new FileBatchLineItemEntity(
+                        doc.getString("id"),
+                        doc.getInteger("fileID"),
+                        doc.getString("file_path"),
+                        doc.getString("configurationID"),
+                        doc.getString("processing_status"),
+                        doc.getDate("created_at"),
+                        doc.getDate("updated_at"));
+                retList.add(entity);
+            }
+        }finally {
+            cursor.close();
         }
 
         return retList;

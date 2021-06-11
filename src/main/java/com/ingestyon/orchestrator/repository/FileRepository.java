@@ -60,15 +60,20 @@ public class FileRepository extends BaseRepository{
 
     private ArrayList<FileLineItemEntity> find() {
         ArrayList<FileLineItemEntity> retList = new ArrayList<FileLineItemEntity>();
-        MongoCursor<Document> cursor = database.getCollection(COLLECTION_NAME).find().iterator();
-        while (cursor.hasNext()){
-            Document doc = cursor.next();
-            retList.add (new FileLineItemEntity(
-                    doc.getString("id"),
-                    doc.getString("process_run_id"),
-                    doc.getString("command"),
-                    doc.getDate("created_at"),
-                    doc.getDate("updated_at")));
+        MongoCursor<Document> cursor = null;
+        try{
+            cursor = database.getCollection(COLLECTION_NAME).find().iterator();
+            while (cursor.hasNext()){
+                Document doc = cursor.next();
+                retList.add (new FileLineItemEntity(
+                        doc.getString("id"),
+                        doc.getString("process_run_id"),
+                        doc.getString("command"),
+                        doc.getDate("created_at"),
+                        doc.getDate("updated_at")));
+            }
+        }finally {
+            cursor.close();
         }
 
         return retList;
